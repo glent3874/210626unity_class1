@@ -10,8 +10,7 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - jabjai
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: ec9a5c760709af64e99dafb51553bee3, type: 3}
+  fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
