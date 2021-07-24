@@ -20,6 +20,7 @@ public class car : MonoBehaviour
     [Range(2, 10)]
     public int doorCount;
     #endregion
+
     #region 其他類型
     //color
     public Color color1;                                        //預設黑色透明
@@ -51,6 +52,7 @@ public class car : MonoBehaviour
     public Transform traCar;
     public SpriteRenderer sprPicture;
     #endregion
+
     #region 事件
     // 開始事件: 播放遊戲時執行一次, 處理初始化
     private void Start()
@@ -64,11 +66,47 @@ public class car : MonoBehaviour
         windowSky = true;
         cc = 5000;
         weight = 9.9f;
+        Drive(300,"GOGOGO");
+        Drive(60,"轟隆隆","拉風");
+        float kg = KG();
+        print("轉為公斤的資訊" + kg);
+
+        print("BMI:" + BMI(43, 1.58f));
     }
     //更新事件: 大約一秒60次, 60FPS, 處理物件移動或者監聽玩家輸入
     private void Update()
     {
         
+    }
+    #endregion
+
+    #region 函式 method
+    //預設值一定要在最右邊
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="speed">移動速度</param>
+    /// <param name="sound">音效</param>
+    /// <param name="effect">特效</param>
+
+    private void Drive(int speed,string sound = "WAIT",string effect = "灰塵")
+    {
+        print("開車囉"+speed+sound);
+    }
+    private float KG()
+    {
+        return weight * 1000;
+    }
+
+    /// <summary>
+    /// 計算 BMI
+    /// </summary>
+    /// <param name="weight">體重(kg)</param>
+    /// <param name="height">身高(m)</param>
+    /// <returns>BMI值</returns>
+    private float BMI(float weight, float height)
+    {
+        return weight / (height * height);
     }
     #endregion
 }
