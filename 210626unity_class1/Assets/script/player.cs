@@ -3,10 +3,10 @@ using UnityEngine;
 public class player : MonoBehaviour
 {
     #region 欄位
-    [Header("移動速度"), Range(0,1000)]
+    [Header("移動速度"), Range(0,50)]
     public float moveSpeed = 10.5f;
-    [Header("跳躍高度"),Range(0, 3000)]
-    public int jumpHeight = 100;
+    [Header("跳躍高度"),Range(0, 15000)]
+    public int jumpHeight = 3000;
     [Header("血量"), Range(0, 200)]
     public float HP = 100;
     [Header("是否在地板上"),Tooltip("用來儲存角色是否在地板上的資訊, 在地板上true, 反之false")]
@@ -32,6 +32,8 @@ public class player : MonoBehaviour
     private void Update()
     {
         GetPlayerInputHorizontal();
+        Turndirection();
+        Jump();
     }
 
     // 固定更新事件
@@ -50,8 +52,10 @@ public class player : MonoBehaviour
         // 水平值 = 輸入.取得軸向(軸向名稱)
         // 作用: 取得玩家按下水平按鍵的值, 按右為 1 , 按左為-1, 沒按為 0 
         hValue = Input.GetAxis("Horizontal");
-        print("玩家水平值: " + hValue);
+        //print("玩家水平值: " + hValue);
     }
+    [Header("重力"), Range(0.01f, 1)]
+    public float gravity = 1;
 
     /// <summary>
     /// 移動
@@ -63,16 +67,34 @@ public class player : MonoBehaviour
         // 簡寫: transform 此物件的 Transform 變形元件
         // posMove = 角色當前座標 + 玩家輸入的水平值
         // Time.fixedDeltaTime 指 1/50 秒
-        Vector2 posMove = transform.position + new Vector3(horizontal, 0, 0) * moveSpeed * Time.fixedDeltaTime;
+        Vector2 posMove = transform.position + new Vector3(horizontal, -gravity, 0) * moveSpeed * Time.fixedDeltaTime;
         // 剛體.移動座標(要前往的座標);
         rig.MovePosition(posMove);
+    }
+
+    private void Turndirection()
+    {
+        // 如果玩家按D就將角度設定為(0,0,0)
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            transform.eulerAngles = Vector3.zero;
+        }
+        // 如果玩家按A就將角度設定為(0,180,0)
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+        }
+
     }
     /// <summary>
     /// 跳躍
     /// </summary>
     private void Jump()
     {
-
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            rig.AddForce(new Vector2(0, jumpHeight));
+        }
     }
     /// <summary>
     /// 攻擊
