@@ -3,8 +3,8 @@ using UnityEngine;
 public class player : MonoBehaviour
 {
     #region 欄位
-    [Header("移動速度"), Range(0,50)]
-    public float moveSpeed = 10.5f;
+    [Header("移動速度"), Range(0,500)]
+    public float moveSpeed;
     [Header("跳躍高度"),Range(0, 15000)]
     public int jumpHeight = 3000;
     [Header("血量"), Range(0, 200)]
@@ -40,7 +40,20 @@ public class player : MonoBehaviour
     // 一秒固定執行 50 次, 官方建議有使用到物理 API 要在此事件內執行
     private void FixedUpdate()
     {
-        Move(hValue);
+        Move(hValue * 5);
+    }
+
+    [Header("檢查地板區域: 位移與半徑")]
+    public Vector3 groundOffset;
+    [Range(0, 2)]
+    public float groundRadius = 0.5f;
+
+    // 繪製圖示事件: 輔助開發者用, 僅會顯示在編輯器unity內
+    private void OnDrawGizmos()
+    {
+        // 先決定顏色在繪製圖示
+        Gizmos.color = new Color(1, 0, 0, 0.3f);    // 半透明紅色
+        Gizmos.DrawSphere(transform.position + groundOffset, groundRadius);   // 繪製球體(中心點, 半徑)
     }
     #endregion
     #region 函式
@@ -63,6 +76,7 @@ public class player : MonoBehaviour
     /// <param name="horizontal">左右數值</param>
     private void Move(float horizontal)
     {
+        /** 第一種移動方式: 自訂重力
         // 區域變數: 在方法內的欄位, 有區域性, 僅限於此方法內存取
         // 簡寫: transform 此物件的 Transform 變形元件
         // posMove = 角色當前座標 + 玩家輸入的水平值
@@ -70,8 +84,15 @@ public class player : MonoBehaviour
         Vector2 posMove = transform.position + new Vector3(horizontal, -gravity, 0) * moveSpeed * Time.fixedDeltaTime;
         // 剛體.移動座標(要前往的座標);
         rig.MovePosition(posMove);
+        */
+
+        /** 第二種移動方式: 使用專案內的重力 - 較緩慢 */
+        rig.velocity = new Vector2(horizontal + moveSpeed * Time.fixedDeltaTime, rig.velocity.y);
     }
 
+    /// <summary>
+    /// 旋轉方向: 處理角色面向問題, 按右角度0, 按左角度180
+    /// </summary>
     private void Turndirection()
     {
         // 如果玩家按D就將角度設定為(0,0,0)
@@ -86,16 +107,29 @@ public class player : MonoBehaviour
         }
 
     }
+
     /// <summary>
     /// 跳躍
     /// </summary>
     private void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        // Vector2 參數可以使用 Vector3 代入, 程式會自動把 z 軸取消
+        // << 位移運算子
+        // 指定圖層語法: 1 << 圖層編號
+        Collider2D hit = Physics2D.OverlapCircle(transform.position + groundOffset, groundRadius, 1 << 6);
+
+        //print("碰到的物件: " + hit.name);
+
+        if (hit)onFloor = true;
+        else onFloor = false;
+
+        // 如果玩家按下空白鍵角色就往上跳躍
+        if(onFloor && Input.GetKeyDown(KeyCode.Space))
         {
             rig.AddForce(new Vector2(0, jumpHeight));
         }
     }
+
     /// <summary>
     /// 攻擊
     /// </summary>
