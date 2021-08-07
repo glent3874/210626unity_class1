@@ -35,6 +35,7 @@ public class player : MonoBehaviour
         GetPlayerInputHorizontal();
         Turndirection();
         Jump();
+        Attack();
     }
 
     // 固定更新事件
@@ -137,12 +138,21 @@ public class player : MonoBehaviour
         }
     }
 
+    [Header("攻擊冷卻"), Range(0, 5)]
+    public float timer;
+
     /// <summary>
     /// 攻擊
     /// </summary>
     private void Attack()
     {
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            ani.SetTrigger("攻擊");
 
+            timer += Time.deltaTime;
+            print("攻擊後累加時間: " + timer);
+        }
     }
     /// <summary>
     /// 受傷
