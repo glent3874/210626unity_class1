@@ -27,6 +27,7 @@ public class player : MonoBehaviour
         // GetCompoment<類型>() 泛型方法, 可以指定任何類型
         // 作用: 取得此物件的 2D 剛體元件
         rig = GetComponent<Rigidbody2D>();
+        ani = GetComponent<Animator>();
     }
 
     private void Update()
@@ -88,6 +89,9 @@ public class player : MonoBehaviour
 
         /** 第二種移動方式: 使用專案內的重力 - 較緩慢 */
         rig.velocity = new Vector2(horizontal + moveSpeed * Time.fixedDeltaTime, rig.velocity.y);
+
+        // 控制走路動畫: 不等於0時勾選
+        ani.SetBool("走路", horizontal != 0);
     }
 
     /// <summary>
@@ -122,6 +126,9 @@ public class player : MonoBehaviour
 
         if (hit)onFloor = true;
         else onFloor = false;
+
+        //設定動畫參數 與 是否在地板 相反
+        ani.SetBool("跳躍", !onFloor);
 
         // 如果玩家按下空白鍵角色就往上跳躍
         if(onFloor && Input.GetKeyDown(KeyCode.Space))
