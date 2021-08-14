@@ -139,19 +139,39 @@ public class player : MonoBehaviour
     }
 
     [Header("攻擊冷卻"), Range(0, 5)]
+    public float cd = 2;
+    /// <summary>
+    /// 攻擊計時器
+    /// </summary>
     public float timer;
+    /// <summary>
+    /// 是否為攻擊
+    /// </summary>
+    private bool isAttack;
 
     /// <summary>
     /// 攻擊
     /// </summary>
     private void Attack()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        // 如果不是攻擊中 並且按下左鍵才可以攻擊 啟動觸發參數
+        if(!isAttack && Input.GetKeyDown(KeyCode.Mouse0))
         {
+            isAttack = true;
             ani.SetTrigger("攻擊");
+        }
 
-            timer += Time.deltaTime;
-            print("攻擊後累加時間: " + timer);
+        if(isAttack)
+        {
+            if (timer < cd)
+            { 
+                timer += Time.deltaTime; 
+            }
+            else
+            {
+                timer = 0;
+                isAttack = false;
+            }
         }
     }
     /// <summary>
