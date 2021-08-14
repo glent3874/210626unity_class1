@@ -58,6 +58,7 @@ public class player : MonoBehaviour
         Gizmos.DrawSphere(transform.position + groundOffset, groundRadius);   // 繪製球體(中心點, 半徑)
     }
     #endregion
+
     #region 函式
     /// <summary>
     /// 取得玩家輸入水平軸向值: 左與右 A, D, 左, 右
