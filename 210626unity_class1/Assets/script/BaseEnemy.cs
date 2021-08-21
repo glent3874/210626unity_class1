@@ -25,11 +25,19 @@ public class BaseEnemy : MonoBehaviour
     /// 隨機走路範圍
     /// </summary>
     public Vector2 v2RandomWalk = new Vector2(3, 6);
+    [Header("檢查前方是否有障礙物或地板球體")]
+    public Vector3 checkForwardOffect;
+    [Range(0, 1)]
+    public float checkForwardRadius = 0.3f;
+    [Header("第一次攻擊延遲"), Range(0.5f, 5)]
+    public float attackDelayFirst = 0.5f;
 
     // 將私人欄位顯示在屬性面板上
     [SerializeField]
-    private StateEnemy state;
+    protected StateEnemy state;
     #endregion
+
+
 
     #region 欄位: 私人
     private Rigidbody2D rig;
@@ -74,11 +82,6 @@ public class BaseEnemy : MonoBehaviour
     {
         WalkInFixedUpdate();
     }
-
-    [Header("檢查前方是否有障礙物或地板球體")]
-    public Vector3 checkForwardOffect;
-    [Range(0, 1)]
-    public float checkForwardRadius = 0.3f;
 
     //父類別的成員如果希望子類別複寫必須遵循:
     //1.修飾詞必須是 public 或 protected - 保護 允許子類別存取

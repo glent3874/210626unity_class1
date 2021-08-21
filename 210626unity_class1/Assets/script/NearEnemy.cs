@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// 近距離攻擊敵人類型: 近距離攻擊
@@ -44,7 +45,19 @@ public class NearEnemy : BaseEnemy
             transform.up * checkAttackOffset.y,
             checkAttackSize, 0, 1 << 7);
 
-        if (hit) State = StateEnemy.attack;
+        if (hit) state = StateEnemy.attack;
+    }
+
+    protected override void AttackMethod()
+    {
+        base.AttackMethod();
+
+        StartCoroutine(DelaySendDamageToPlayer());
+    }
+
+    private IEnumerator DelaySendDamageToPlayer()
+    {
+        yield return new WaitForSeconds(attackDelayFirst);
     }
     #endregion
 }
